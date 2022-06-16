@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css"
+    />
+    <style>
+            label,
+      textarea {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+      }
+      textarea {
+        padding: 10px;
+        max-width: 100%;
+        line-height: 1.5;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-shadow: 1px 1px 1px #999;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+      }
+      body {
+        font-family: Helvetica;
+        -webkit-font-smoothing: antialiased;
+        {% comment %} background: rgba(71, 147, 227, 1); {% endcomment %}
+      }
+      h2 {
+        text-align: center;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: white;
+        padding: 30px 0;
+      }
+
+      .container{
+        width:40%;
+        margin: 10px 70px 70px;
+      }
+
+      /* Table Styles */
+
+      .table-wrapper {
+        margin: 10px 70px 70px;
+        box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+      }
+
+      .fl-table {
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: normal;
+        border: none;
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 100%;
+        white-space: nowrap;
+        background-color: white;
+      }
+
+      .fl-table td,
+      .fl-table th {
+        text-align: center;
+        padding: 8px;
+      }
+
+      .fl-table td {
+        border-right: 1px solid #f8f8f8;
+        font-size: 12px;
+      }
+
+      .fl-table thead th {
+        color: #ffffff;
+        background: #4fc3a1;
+      }
+
+      .fl-table thead th:nth-child(odd) {
+        color: #ffffff;
+        background: #324960;
+      }
+
+      .fl-table tr:nth-child(even) {
+        background: #f8f8f8;
+      }
+
+      /* Responsive */
+
+      @media (max-width: 767px) {
+        .fl-table {
+          display: block;
+          width: 100%;
+        }
+        .table-wrapper:before {
+          content: "Scroll horizontally >";
+          display: block;
+          text-align: right;
+          font-size: 11px;
+          color: white;
+          padding: 0 0 10px;
+        }
+        .fl-table thead,
+        .fl-table tbody,
+        .fl-table thead th {
+          display: block;
+        }
+        .fl-table thead th:last-child {
+          border-bottom: none;
+        }
+        .fl-table thead {
+          float: left;
+        }
+        .fl-table tbody {
+          width: auto;
+          position: relative;
+          overflow-x: auto;
+        }
+        .fl-table td,
+        .fl-table th {
+          padding: 20px 0.625em 0.625em 0.625em;
+          height: 60px;
+          vertical-align: middle;
+          box-sizing: border-box;
+          overflow-x: hidden;
+          overflow-y: auto;
+          width: 120px;
+          font-size: 13px;
+          text-overflow: ellipsis;
+        }
+        .fl-table thead th {
+          text-align: left;
+          border-bottom: 1px solid #f7f7f9;
+        }
+        .fl-table tbody tr {
+          display: table-cell;
+        }
+        .fl-table tbody tr:nth-child(odd) {
+          background: none;
+        }
+        .fl-table tr:nth-child(even) {
+          background: transparent;
+        }
+        .fl-table tr td:nth-child(odd) {
+          background: #f8f8f8;
+          border-right: 1px solid #e6e4e4;
+        }
+        .fl-table tr td:nth-child(even) {
+          border-right: 1px solid #e6e4e4;
+        }
+        .fl-table tbody td {
+          display: block;
+          text-align: center;
+        }
+      }
+    </style>
+    <script
+      type="text/javascript"
+      language="javascript"
+      src="https://code.jquery.com/jquery-3.5.1.js"
+    ></script>
+    <script
+      type="text/javascript"
+      language="javascript"
+      src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      language="javascript"
+      src="https://cdn.datatables.net/1.11.1/js/dataTables.bootstrap5.min.js"
+    ></script>
+    <title>WorkOrder Verification</title>
+  </head>
+  <body>
+    <div class="row">
+      <div class="container">
+        <label for="story">Enter JSON WorkOrder for verification:</label>
+        <textarea id="story" name="workOrder" rows="25" cols="60">
+{
+  "type":"ANALYSIS",
+  "department":"GOoD analysis department",
+  "start_date":"2020-08-13",
+  "end_date":"2020-08-15",
+  "currency":"USD",
+  "cost":123.12,
+  "parts":[
+    {
+      "inventory_number":"InventoryNumber1",
+      "name":"PartNumber1",
+      "count":1
+    },
+    {
+      "inventory_number":"InventoryNumber2",
+      "name":"PartNumber2",
+      "count":2
+    }
+  ]
+}
+        </textarea>
+        <input type="submit" value="Submit" id="submit" />
+      </div>
+
+      <div class="container">
+        <label for="story">Verification Response:</label>
+        <textarea id="response" rows="25" cols="60" readonly> </textarea>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table class="fl-table" id="historyTable" style="width: 100%">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Request Date</th>
+            <th>Type</th>
+            <th>Department</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </body>
+
+  <script type="text/javascript" class="init">
+    $(document).ready(function () {
+      getTableData();
+
+      $("#submit").click(function () {
+        $.ajax({
+          url: "http://localhost:1111/api/verify",
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          data: $("#story").val(),
+          success: function (data) {
+            $("#response").val(JSON.stringify(data));
+            getTableData();
+          },
+          error: function (xhr) {
+            alert("No Valid Data");
+          },
+        });
+      });
+    });
+    function getTableData() {
+      if ($.fn.DataTable.isDataTable("#historyTable")) {
+        $("#historyTable").DataTable().clear().destroy();
+      }
+      $("#historyTable").DataTable({
+        ajax: {
+          url: "/api/history",
+          dataSrc: "",
+        },
+        columns: [
+          { data: "id" },
+          {
+            data: "requestDate",
+            render: function (data, type) {
+              var d = new Date(data);
+              return d.toString();
+            },
+          },
+          { data: "type" },
+          { data: "department" },
+          {
+            data: "status",
+            render: function (data, type) {
+              let color = "green";
+              if (data === "NOT_VALID") {
+                color = "red";
+              }
+              return '<span style="color:' + color + '">' + data + "</span>";
+            },
+          },
+        ],
+      });
+    }
+  </script>
+</html>
