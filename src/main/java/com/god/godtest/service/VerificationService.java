@@ -17,18 +17,26 @@ import com.god.godtest.repository.VerificationRepository;
 
 @Service
 public class VerificationService {
-    List<String> validDepartmentList = Arrays.asList("GOod analysis department", "GOod repair department",
-            "GOod replacement department");
 
     @Autowired
     VerificationRepository verificationRepository;
 
     public Verification createVerification(Verification verification) {
-        return verificationRepository.save(verification);
+        try {
+            return verificationRepository.save(verification);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     public List<Verification> getHistory() {
-        return verificationRepository.findAll();
+        try {
+            return verificationRepository.findAll();
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     public List<String> verifyRequest(WorkOrder order) {
@@ -61,9 +69,9 @@ public class VerificationService {
     private String verifyFactoryOrderNumber(String factoryOrderNumber) {
         if (factoryOrderNumber.length() != 10)
             return "Factory Order number length should be 10";
-        if (factoryOrderNumber.substring(0, 2).matches("[a-zA-Z]+"))
+        if (!factoryOrderNumber.substring(0, 2).matches("[a-zA-Z]+"))
             return "Factory Order number should start with 2 alphabets";
-        if (!factoryOrderNumber.substring(2).matches(".*[a-zA-Z]+.*"))
+        if (factoryOrderNumber.substring(2).matches(".*[a-zA-Z]+.*"))
             return "Factory Order number should contains only number after 2nd alphabet";
         return null;
     }
@@ -111,6 +119,9 @@ public class VerificationService {
     }
 
     private String verifyDepartment(String department) {
+        List<String> validDepartmentList = Arrays.asList("GOoD analysis department", "GOoD repair department",
+                "GOoD replacement department");
+
         if (department == null)
             return "Department is empty";
 
