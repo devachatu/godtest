@@ -20,19 +20,36 @@ import com.god.godtest.service.VerificationService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Represents an RestController to handle verification API endpoints.
+ * 
+ * @author Deva Chaitanya
+ * @version 1.0
+ */
 @RestController
 @RequestMapping(path = "/api", produces = "application/json")
 @CrossOrigin()
 public class VerificationController {
 
+    /**
+     * Creates an instance of the verification service bean.
+     */
     @Autowired
     VerificationService verificationService;
 
+    /**
+     * Endpoint to return the UI for the webpage.
+     */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home() {
         return "index";
     }
 
+    /**
+     * Endpoint to send the WorkOrder to get verified.
+     * 
+     * @param jsonNode The Json Value of Work Order.
+     */
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
     public ResponseEntity<Verification> verifyRequest(@RequestBody JsonNode data) {
         WorkOrder order = new WorkOrder(data);
@@ -61,6 +78,10 @@ public class VerificationController {
         return new ResponseEntity<Verification>(verification, HttpStatus.OK);
     }
 
+    /**
+     * Endpoint to get the previous verification entries from the database.
+     * 
+     */
     @RequestMapping(value = "/history", method = RequestMethod.GET)
     public ResponseEntity<List<Verification>> getHistory() {
         return new ResponseEntity<List<Verification>>(verificationService.getHistory(), HttpStatus.OK);

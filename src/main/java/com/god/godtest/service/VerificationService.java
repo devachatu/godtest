@@ -15,12 +15,26 @@ import com.god.godtest.model.Verification;
 import com.god.godtest.model.WorkOrder;
 import com.god.godtest.repository.VerificationRepository;
 
+/**
+ * Represents an Service to handle verification logic of our application.
+ * 
+ * @author Deva Chaitanya
+ * @version 1.0
+ */
 @Service
 public class VerificationService {
 
+    /**
+     * Creates an instance of the verification repository bean.
+     */
     @Autowired
     VerificationRepository verificationRepository;
 
+    /**
+     * Adds the verification object to the database.
+     * 
+     * @param verification An Object containing the Verification.
+     */
     public Verification createVerification(Verification verification) {
         try {
             return verificationRepository.save(verification);
@@ -30,6 +44,9 @@ public class VerificationService {
 
     }
 
+    /**
+     * Gets the previous verifications from the database.
+     */
     public List<Verification> getHistory() {
         try {
             return verificationRepository.findAll();
@@ -39,6 +56,11 @@ public class VerificationService {
 
     }
 
+    /**
+     * Verifies the WorkOrder.
+     * 
+     * @param order A WorkOrder for verification.
+     */
     public List<String> verifyRequest(WorkOrder order) {
         List<String> errors = new CustomArrayList();
         errors.add(verifyDepartment(order.getDepartment()));
@@ -48,6 +70,11 @@ public class VerificationService {
         return errors;
     }
 
+    /**
+     * Verifies the Replacement Specific requirements.
+     * 
+     * @param order A Replacement for verification.
+     */
     public List<String> verifyReplacement(Replacement order) {
         List<String> errors = new CustomArrayList();
         errors.add(order.getFactoryName() == null ? "Factory name is null" : null);
@@ -57,6 +84,11 @@ public class VerificationService {
         return errors;
     }
 
+    /**
+     * Verifies the Repair Specific requirements.
+     * 
+     * @param order A Repair for verification.
+     */
     public List<String> verifyRepair(Repair order) {
         List<String> errors = new CustomArrayList();
         errors.add(verifyAnalysisDate(order.getAnalysisDate(), order.getStartDate(), order.getEndDate()));
@@ -66,6 +98,11 @@ public class VerificationService {
         return errors;
     }
 
+    /**
+     * Verifies the Factory Order Number.
+     * 
+     * @param factoryOrderNumber A String Containing the factory order number.
+     */
     private String verifyFactoryOrderNumber(String factoryOrderNumber) {
         if (factoryOrderNumber.length() != 10)
             return "Factory Order number length should be 10";
@@ -76,6 +113,11 @@ public class VerificationService {
         return null;
     }
 
+    /**
+     * Verifies the Parts inventory number.
+     * 
+     * @param parts A List Containing the parts.
+     */
     private String verifyPartsInventoryNumber(List<com.god.godtest.model.Part> parts) {
         for (com.god.godtest.model.Part part : parts) {
             if (part.getInventoryNumber() == null)
@@ -84,6 +126,11 @@ public class VerificationService {
         return null;
     }
 
+    /**
+     * Verifies the Parts count.
+     * 
+     * @param parts A List Containing the parts.
+     */
     private String verifyPartsCount(List<com.god.godtest.model.Part> parts) {
         int total = 0;
         for (com.god.godtest.model.Part part : parts) {
@@ -94,6 +141,13 @@ public class VerificationService {
         return null;
     }
 
+    /**
+     * Verifies the repair test date.
+     * 
+     * @param testDate  A Date containing the testdate.
+     * @param startDate A Date containing the startDate.
+     * @param endDate   A Date containing the endDate.
+     */
     private String verifyTestDate(Date testDate, Date startDate, Date endDate) {
 
         if (testDate == null)
@@ -108,6 +162,13 @@ public class VerificationService {
         return null;
     }
 
+    /**
+     * Verifies the repair analysis date.
+     * 
+     * @param analysisDate A Date containing the analysisDate.
+     * @param startDate    A Date containing the startDate.
+     * @param endDate      A Date containing the endDate.
+     */
     private String verifyAnalysisDate(Date analysisDate, Date startDate, Date endDate) {
         if (analysisDate.after(endDate))
             return "Analysis date is after end date";
@@ -118,6 +179,11 @@ public class VerificationService {
         return null;
     }
 
+    /**
+     * Verifies the Work Order department.
+     * 
+     * @param department A String Containing the Work Order department.
+     */
     private String verifyDepartment(String department) {
         List<String> validDepartmentList = Arrays.asList("GOoD analysis department", "GOoD repair department",
                 "GOoD replacement department");
@@ -131,6 +197,12 @@ public class VerificationService {
         return null;
     }
 
+    /**
+     * Verifies the work order date.
+     * 
+     * @param startDate A Date containing the startDate.
+     * @param endDate   A Date containing the endDate.
+     */
     private String verifyDates(Date startDate, Date endDate) {
         if (startDate == null)
             return "Start date is empty";
@@ -147,6 +219,11 @@ public class VerificationService {
         return null;
     }
 
+    /**
+     * Verifies the Work Order currency.
+     * 
+     * @param currency A String Containing the Work Order currency.
+     */
     private String verifyCurrency(String currency) {
         if (currency != null) {
             try {
@@ -158,6 +235,11 @@ public class VerificationService {
         return null;
     }
 
+    /**
+     * Verifies the Work Order cost.
+     * 
+     * @param cost A double Containing the Work Order cost.
+     */
     private String verifyPrice(double cost) {
         if (cost <= 0) {
             return "cost should be greater than 0";
