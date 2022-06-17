@@ -31,6 +31,13 @@ public class Verification implements Serializable {
         this.status = status;
     }
 
+    /**
+     * No args Constructor to create a Verification.
+     * 
+     */
+    public Verification() {
+    };
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
